@@ -8,7 +8,13 @@ from .coordinate import Coordinate
 
 
 class Vertex(Coordinate):
-    def __init__(self, x: int, y: int, next_vertex: "Vertex" = None, previous_vertex: "Vertex" = None) -> None:
+    def __init__(
+        self,
+        x: int,
+        y: int,
+        next_vertex: "Vertex" = None,
+        previous_vertex: "Vertex" = None,
+    ) -> None:
         super().__init__(x, y)
         self.next_vertex = next_vertex
         self.previous_vertex = previous_vertex

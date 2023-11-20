@@ -82,7 +82,6 @@ class Map:
         except IndexError:
             pass
 
-
     def __str__(self) -> str:
         """Returns the map as a single string to be printable in the terminal"""
         return "\n".join(
@@ -185,4 +184,6 @@ class Map:
 
     def count_nothings_in_row(self, row) -> int:
         """Counts up the number of spaces in a row that are confirmed nothing."""
-        return len([c for c in self.coordinates[row + self.y_offset] if isinstance(c, Nothing)])
+        return len(
+            [c for c in self.coordinates[row + self.y_offset] if isinstance(c, Nothing)]
+        )

@@ -39,5 +39,7 @@ class Sensor(Coordinate):
         for x in range(-max_distance, max_distance + 1):
             for y in range(-abs(abs(x) - max_distance), abs(abs(x) - max_distance) + 1):
                 c = Nothing(x + self.x, y + self.y)
-                if not c.shares_location(self.closest_beacon) and not c.shares_location(self):
+                if not c.shares_location(self.closest_beacon) and not c.shares_location(
+                    self
+                ):
                     yield c
