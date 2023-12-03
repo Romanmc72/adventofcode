@@ -58,7 +58,7 @@ fn main() -> std::io::Result<()> {
 fn get_game_number_and_remainder(line: &str) -> (u32, String) {
     let split_line: Vec<String> = common::split_str_to_vec(line, ": ");
     let game_portion = split_line.get(0).unwrap();
-    let game_portion_split: Vec<String> = common::split_str_to_vec(&game_portion, " ");
+    let game_portion_split: Vec<String> = common::split_str_to_vec(game_portion, " ");
     let game_number_string = game_portion_split.get(1).unwrap();
     let game_number: u32 = game_number_string.parse().unwrap();
     let latter_half = split_line.get(1).unwrap().to_string();
@@ -83,7 +83,7 @@ fn get_game_number_and_remainder(line: &str) -> (u32, String) {
 /// The variable holding a number which will take on the value of either
 /// itself or the parsed number, whichever is higher.
 fn pull_number(input_string: &str, color: &str, max_to_set: &mut u32) {
-    if !input_string.find(color).is_none() {
+    if input_string.contains(color) {
         let delimiter = " ".to_owned() + color;
         let split_string = common::split_str_to_vec(input_string, &delimiter);
         let num: u32 = split_string.get(0).unwrap().parse().unwrap();

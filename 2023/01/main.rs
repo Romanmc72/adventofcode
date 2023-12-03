@@ -38,14 +38,14 @@ fn main() -> std::io::Result<()> {
             let mut number = character.to_digit(radix);
 
             // Holy shit this is ugly, need me a separate function
-            let mut found_num = !number.is_none();
+            let mut found_num = number.is_some();
             if !found_num && part == 2 {
                 let mut substring = String::from(character);
                 let next1 = line.chars().nth(index + 1);
-                if !next1.is_none() {
+                if next1.is_some() {
                     substring.push(next1.unwrap());
                     let next2 = line.chars().nth(index + 2);
-                    if !next2.is_none() {
+                    if next2.is_some() {
                         substring.push(next2.unwrap());
                         if substring == "one" {
                             number = Some(1);
@@ -58,7 +58,7 @@ fn main() -> std::io::Result<()> {
                             found_num = true;
                         }
                         let next3 = line.chars().nth(index + 3);
-                        if !next3.is_none() {
+                        if next3.is_some() {
                             substring.push(next3.unwrap());
                             if substring == "nine" {
                                 number = Some(9);
@@ -71,7 +71,7 @@ fn main() -> std::io::Result<()> {
                                 found_num = true;
                             }
                             let next4 = line.chars().nth(index + 4);
-                            if !next4.is_none() {
+                            if next4.is_some() {
                                 substring.push(next4.unwrap());
                                 if substring == "seven" {
                                     number = Some(7);
@@ -98,7 +98,7 @@ fn main() -> std::io::Result<()> {
             }
         }
         let new_num = first * 10 + last;
-        total = total + new_num;
+        total += new_num;
         println!("=================\nLine:   {}\nBecame: {}\nTotal:  {}", line, new_num, total);
     }
     println!("=================\nThe answer is! {}", total);

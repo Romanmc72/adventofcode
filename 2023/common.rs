@@ -19,7 +19,7 @@ pub fn get_file_and_part() -> (Vec<String>, u32) {
     let part_str = &args[2];
     let radix = 10;
     let part = part_str.chars()
-        .nth(0)
+        .next()
         .expect("I was looking for an integer here, 1 or 2")
         .to_digit(radix)
         .unwrap();
