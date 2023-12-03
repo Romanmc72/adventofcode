@@ -53,7 +53,7 @@ fn main() -> std::io::Result<()> {
 ///
 /// Return
 /// ------
-/// (u32, str)
+/// (u32, String)
 /// The game number and the rest of the line.
 fn get_game_number_and_remainder(line: &str) -> (u32, String) {
     let split_line: Vec<String> = common::split_str_to_vec(line, ": ");
