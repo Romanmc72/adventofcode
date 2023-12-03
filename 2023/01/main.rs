@@ -1,25 +1,33 @@
-use std::env;
-use std::fs::File;
-use std::io::prelude::*;
+mod common;
 
+/// Description
+/// -----------
+/// Solves Day 1 2023 which has its own separate examples for each part, but
+/// the same input for the puzzle in both parts. The goal is to take the
+/// first number that appears in a string and the last number, combine them
+/// as a first and second digit in a 2 digit number then to total up all 2
+/// digit numbers in the list of strings. If only 1 number appears in the
+/// string then that number is both the first and second digit.
+///
+/// Params
+/// ------
+/// The arguments for this `main()` program are picked up from the command line
+/// when the program is executed and are based on the argument's position.
+/// :filename: String [arg 1]
+/// The name of the file on disk to read and split into lines of Vec<String>
+///
+/// :part: u32 [arg 2]
+/// The part of the question that this input is being processed for. (1 or 2)
+///
+/// Return
+/// ------
+/// Prints out the numbers parsed from each line along with the line that
+/// it came from and the running total. After all lines have been processed
+/// the program prints out the total for all of the numbers.
 fn main() -> std::io::Result<()> {
-    let args: Vec<String> = env::args().collect();
-    let file_name = &args[1];
-    let part_str = &args[2];
-    let radix = 10;
-    let part = part_str.chars()
-        .nth(0)
-        .expect("I was looking for an integer here, 1 or 2")
-        .to_digit(radix)
-        .unwrap();
-    if part != 1 && part != 2 {
-        panic!("Invalid Part # selection, expected 1 or 2 but got {}", part);
-    }
-    let mut file = File::open(file_name)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-    let lines = contents.split("\n");
+    let (lines, part) = common::get_file_and_part();
 
+    let radix = 10;
     let mut total = 0;
     for line in lines {
         let mut first_num = true;
