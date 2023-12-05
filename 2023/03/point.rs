@@ -1,22 +1,19 @@
+/// Description
+/// -----------
+/// An X, Y coordinate and the character found at that coordinate.
+#[derive(PartialEq, Eq, Hash, Debug, Clone)]
 pub struct Point {
-    x: i32,
-    y: i32,
+    pub x: usize,
+    pub y: usize,
+    pub c: char,
 }
 
-impl Point {
-    pub fn new(x: i32, y: i32) -> Point {
-        Point {x: x, y: y}
-    }
-    pub fn get_neighbors(&self) -> Vec<Point> {
-        vec![
-            Point::new(x + 1, y    ),
-            Point::new(x    , y + 1),
-            Point::new(x - 1, y    ),
-            Point::new(x    , y - 1),
-            Point::new(x + 1, y + 1),
-            Point::new(x + 1, y - 1),
-            Point::new(x - 1, y + 1),
-            Point::new(x - 1, y - 1),
-        ]
+/// Description
+/// -----------
+/// Allows a point to be printed on the println!() macro and generally
+/// converted to a string.
+impl std::fmt::Display for Point {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Point(x={}, y={}, '{}')", self.x, self.y, self.c)
     }
 }
