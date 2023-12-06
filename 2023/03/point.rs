@@ -1,4 +1,3 @@
-
 /// Description
 /// -----------
 /// An X, Y coordinate and the character found at that coordinate.
@@ -9,6 +8,7 @@ pub struct Point {
     pub c: char,
 }
 
+
 /// Description
 /// -----------
 /// Allows a point to be printed on the println!() macro and generally
@@ -18,6 +18,7 @@ impl std::fmt::Display for Point {
         write!(f, "Point(x={}, y={}, '{}')", self.x, self.y, self.c)
     }
 }
+
 
 impl Point {
     /// Description
