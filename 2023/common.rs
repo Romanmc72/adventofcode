@@ -60,3 +60,27 @@ pub fn get_file_and_part() -> (Vec<String>, u32) {
 pub fn split_str_to_vec(string_to_split: &str, delimiter: &str) -> Vec<String> {
     string_to_split.split(delimiter).map(str::to_string).collect()
 }
+
+
+/// Description
+/// -----------
+/// Takes string of numbers separated by spaces and returns the array of
+/// numbers.
+///
+/// Params
+/// ------
+/// :string: &str
+/// The string to parse out and split up into numbers.
+///
+/// Return
+/// ------
+/// Vec<u64>
+/// The vector of numbers parsed out of the string.
+pub fn split_text_to_numbers(line: &str) -> Vec<u64> {
+    let numbers: Vec<u64> = line.split(" ")
+        .map(|each_string| each_string.trim())
+        .filter(|each_string| !each_string.is_empty())
+        .map(|each_string| each_string.parse().unwrap())
+        .collect();
+    numbers
+}

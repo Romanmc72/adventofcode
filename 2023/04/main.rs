@@ -6,10 +6,15 @@ mod common;
 
 /// Description
 /// -----------
+/// Part 1)
 /// Parses the scratch card number into 2 halves and checks to see if any
 /// number in the second half exists in the first. For each number the card
 /// total is doubled (starting at 1). The total of all totals is then added
 /// up and returned.
+/// Part 2)
+/// Next it will convert that originally calculated score from the part 1
+/// and use it to "duplicate" subsequent card finally calculating the total
+/// number of cards.
 fn main() {
     let (lines, part) = common::get_file_and_part();
     let mut total: u32 = 0;
