@@ -1,6 +1,8 @@
 use std::cmp;
+
 mod common;
-mod range;
+mod ranges;
+mod sub_transformer;
 mod transformers;
 
 
@@ -11,11 +13,12 @@ mod transformers;
 /// and over for each transformer set.
 fn main() {
     let (lines, part) = common::get_file_and_part();
+    let mut min_seed: u64 = 999999999999999;
+    let mut first_line = true;
+    let mut next_are_sub_transformers = false;
+    let mut transformer = transformers::Transformer::new();
     if part == 1 {
-        let mut first_line = true;
-        let mut next_are_sub_transformers = false;
         let mut seeds: Vec<u64> = vec![];
-        let mut transformer = transformers::Transformer::new();
         for line in lines {
             if first_line {
                 seeds = extract_seeds(line);
@@ -29,40 +32,40 @@ fn main() {
                 next_are_sub_transformers = false;
                 println!("{}", line);
             } else {
-                let sub_transformer = transformers::SubTransformer::from_text_line(&line);
-                transformer.add_sub_transformer(sub_transformer);
+                let sub = sub_transformer::SubTransformer::from_text_line(&line);
+                transformer.add_sub_transformer(sub);
             }
         }
         transformer.transform_seeds(&mut seeds);
         println!("Final Seeds: {:?}", seeds);
-        let mut min_seed: u64 = 999999999999999;
         for seed in seeds.iter() {
             min_seed = cmp::min(*seed, min_seed);
         }
-        println!("Min Seed={}", min_seed);
     } else if part == 2 {
-        let mut seed_ranges: Vec<range::DivisibleRange> = vec![];
-        let mut first_line = true;
-        let mut next_are_sub_transformers = false;
-        let mut transformer = transformers::Transformer::new();
+        let mut seed_ranges: Vec<ranges::DivisibleRange> = vec![];
         for line in lines {
             if first_line {
                 seed_ranges = extract_seeds_part_2(line);
                 first_line = false;
                 println!("Initial Seeds: {:?}", seed_ranges);
             } else if line == "" {
-                // transform_seeds(&mut transformer, &mut seeds);
+                seed_ranges = transformer.transform_seed_ranges(&mut seed_ranges);
                 transformer = transformers::Transformer::new();
                 next_are_sub_transformers = true;
             } else if next_are_sub_transformers {
                 next_are_sub_transformers = false;
                 println!("{}", line);
             } else {
-                let sub_transformer = transformers::SubTransformer::from_text_line(&line);
-                transformer.add_sub_transformer(sub_transformer);
+                let sub = sub_transformer::SubTransformer::from_text_line(&line);
+                transformer.add_sub_transformer(sub);
             }
         }
+        seed_ranges = transformer.transform_seed_ranges(&mut seed_ranges);
+        for seed_range in seed_ranges.iter() {
+            min_seed = cmp::min(seed_range.bottom, min_seed);
+        }
     }
+    println!("Part {} Min Seed={}", part, min_seed);
 }
 
 
@@ -97,9 +100,9 @@ fn extract_seeds(line: String) -> Vec<u64> {
 ///
 /// Return
 /// ------
-/// Vec<DivisibleRange>
+/// Vec<ranges::DivisibleRange>
 /// The vector of divisible ranges found inside the text.
-fn extract_seeds_part_2(line: String) -> Vec<range::DivisibleRange> {
+fn extract_seeds_part_2(line: String) -> Vec<ranges::DivisibleRange> {
     let mut seed_ranges = vec![];
     let og_seeds = extract_seeds(line);
     let end_of_index = og_seeds.len() / 2;
@@ -108,15 +111,8 @@ fn extract_seeds_part_2(line: String) -> Vec<range::DivisibleRange> {
         let seed_range_index = seed_start_index + 1;
         let seed_start = og_seeds.get(seed_start_index).unwrap();
         let seed_range = og_seeds.get(seed_range_index).unwrap();
-        let div_range = range::DivisibleRange::new(*seed_start, seed_start + seed_range - 1);
+        let div_range = ranges::DivisibleRange::new(*seed_start, seed_start + seed_range - 1);
         seed_ranges.push(div_range);
     }
     seed_ranges
 }
-
-
-
-/// Description
-/// -----------
-/// Transforms the seed ranges using the transformer specified.
-fn transform_seeds_part_2(transformer: &mut transformers::Transformer, seed_ranges: &mut Vec<range::DivisibleRange>) {}

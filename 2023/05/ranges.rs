@@ -47,7 +47,7 @@ impl DivisibleRange {
     pub fn divide_at(&self, divide_at: u64) -> Vec<DivisibleRange> {
         if self.is_in_range(divide_at) {
             if self.top == self.bottom {
-                return vec![self.clone()];
+                return vec![self.clone(), self.clone()];
             } else {
                 return vec![
                     DivisibleRange {bottom: self.bottom, top: divide_at},

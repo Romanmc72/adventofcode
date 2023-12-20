@@ -5,226 +5,8 @@
  * check to see if it is actually in range. If it is not in range then we can
  * just return the number and if it is we can return the transformation.
  */
-use common::split_text_to_numbers;
-
-mod range;
-
-
-/// Description
-/// -----------
-/// The data structure representing one transformer that has a source and
-/// destination with a particular ranger attached to it.
-pub struct SubTransformer {
-    pub source: u64,
-    pub destination: u64,
-    pub range: u64,
-}
-
-
-/// Description
-/// -----------
-/// The methods assigned to a sub transformer.
-impl SubTransformer {
-    /// Description
-    /// -----------
-    /// Grabs the source number and the range and adds them together to get
-    /// the top number allowed in the source range.
-    ///
-    /// Return
-    /// ------
-    /// u64
-    /// The ceiling of the range that will be in scope for the sub-transformer.
-    pub fn top_number(&self) -> u64 {
-        self.source + self.range - 1
-    }
-
-    /// Description
-    /// -----------
-    /// Checks to see if a number is within the source range.
-    ///
-    /// Params
-    /// ------
-    /// :number: u64
-    /// The number to check whether or not is within the range.
-    ///
-    /// Return
-    /// ------
-    /// bool
-    /// True if the number is in the range.
-    /// False if the number is not in the range.
-    pub fn is_in_range(&self, number: u64) -> bool {
-        self.source <= number && self.top_number() >= number
-    }
-
-    /// Description
-    /// -----------
-    /// Takes the input number, and applies the transformation to that number.
-    /// If the number is outside of the range then the number itself is just
-    /// returned as is.
-    ///
-    /// Params
-    /// ------
-    /// :number: &mut u64
-    /// The number to transform in place.
-    pub fn transform_number(&self, number: &mut u64) {
-        if !self.is_in_range(*number) {
-            return;
-        }
-        let difference: u64 = *number - self.source;
-        if difference > self.range {
-            panic!(
-                "BRO THIS IS NOT EVEN IT THE RANGE WTF??? number {} ; source {} ; range {}",
-                number,
-                self.source,
-                self.range
-            );
-        }
-        *number = self.destination + difference;
-    }
-
-    /// Description
-    /// -----------
-    /// Transforms the numbers from the input range and returns a new
-    /// range with the numbers transformed.
-    ///
-    /// Params
-    /// ------
-    /// :range: DivisibleRange
-    /// The range to transform numbers for.
-    ///
-    /// Return
-    /// ------
-    /// DivisibleRange
-    /// The divisible range post transformation.
-    fn transform_range_numbers(&self, range: range::DivisibleRange) -> range::DivisibleRange {
-        let bottom = self.transform_number(*range.bottom);
-        let top = self.transform_number(*range.top)
-        range::DivisibleRange::new(bottom, top)
-    }
-
-    /// Description
-    /// -----------
-    /// Takes the input number, and applies the transformation to that number.
-    /// If the number is outside of the range then the number itself is just
-    /// returned as is.
-    ///
-    /// Params
-    /// ------
-    /// :range: &mut DivisibleRange
-    /// The range to transform.
-    ///
-    /// Return
-    /// ------
-    /// (Option<Vec<range::DivisibleRange>>, Option<Vec<range::DivisibleRange>>)
-    /// A pair of optional objects. The first is a vector of divisible ranges
-    /// and the second is a divisible range. The first signifies ranges that
-    /// were transformed by this sub transformer and the second signify a vector
-    /// that this sub transformer did not touch mainly because it was out of range.
-    pub fn transform_range(&self, range: &mut range::DivisibleRange) -> (
-        Option<Vec<range::DivisibleRange>>, Option<range::DivisibleRange>
-    ) {
-        let transformer_top = self.top_number();
-        // TODO Transform 1 range
-        // Cases
-        // T:           |-------|
-        // R: |-------|
-        //           OR
-        // T: |----------|
-        // R:               |-------|
-        // Returns: 1
-        if range.top < self.source {
-            return (Some(vec![*range]), None);
-        }
-        else if range.bottom > self.top_number() {
-            return (None, Some(*range));
-        }
-        // T:    |-------|
-        // R: |-------|
-        // Returns: 2
-        else if range.top >= self.source && range.top <= transformer_top && range.bottom < self.source {
-            let divided_range = range.divide_at(self.source);
-            let bottom_range = divided_range.get(0).unwrap();
-            let top_range = divided_range.get(1).unwrap();
-            let transformed_top_range = self.transform_range_numbers(top_range);
-            return (Some(vec![bottom_range]), Some(transformed_top_range));
-        }
-        // T: |----------|
-        // R:   |-------|
-        // Returns: 1
-        else if range.top <= self.top_number && range.bottom >= self.source {
-            let transformed_range = self.transform_range_numbers(range);
-            return (Some(vec![transformed_range]), None);
-        }
-        // T: |----------|
-        // R:        |-------|
-        // Returns: 2
-        else if range.bottom <= transformer_top && range.top > transformer_top {
-            let divided_range = range.divide_at(transformer_top);
-            let bottom_range = divided_range.get(0).unwrap();
-            let top_range = divided_range.get(1).unwrap();
-            let transformed_range = self.transform_range_numbers(bottom_range);
-            return (Some(vec![transformed_range]), Some(top_range));
-        }
-        // T:  |----|
-        // R: |-------|
-        // Returns: 3
-        else if range.bottom < self.source && range.top > transformer_top {
-            let divided_range = range.divide_at(self.source);
-            let bottom_range = divided_range.get(0).unwrap();
-            let divide_again_range = divided_range.get(1).unwrap();
-            let sub_divided_range = divide_again_range.divide_at(transformer_top);
-            let middle_range = sub_divided_range.get(0).unwrap();
-            let top_range = sub_divided_range.get(1).unwrap();
-            let transformed_range = self.transform_range_numbers(middle_range);
-            return (Some(vec![bottom_range, transformed_range]), Some(top_range));
-        }
-        else {
-            panic!("This is not right...");
-        }
-    }
-
-    /// Description
-    /// -----------
-    /// Detects whether a DivisibleRange in any way shape or form falls within
-    /// the range of numbers that this sub transformer marshalls.
-    ///
-    /// Params
-    /// ------
-    /// :range: DivisibleRange
-    /// The range to check against this sub transformer.
-    ///
-    /// Return
-    /// ------
-    /// bool
-    /// True if the DivisibleRange overlaps with the source range of this
-    /// sub transformer.
-    /// False if the DivisibleRange does not overlaps with the source range
-    /// of this sub transformer.
-    pub fn is_range_in_range(&self, range: range::DivisibleRange) bool {
-        self.is_empty(range.bottom) || self.is_in_range(range.top)
-    }
-
-    /// Description
-    /// -----------
-    /// From a raw line of text, construct the sub transformer.
-    ///
-    /// Params
-    /// ------
-    /// :line: &String
-    /// The line of text to parse.
-    ///
-    /// Return
-    /// ------
-    /// SubTransformer
-    /// The sub transformer constructed from this line of text.
-    pub fn from_text_line(line: &str) -> SubTransformer {
-        let numbers: Vec<u64> = split_text_to_numbers(line);
-        let source = numbers.get(1).unwrap();
-        let destination = numbers.get(0).unwrap();
-        let range = numbers.get(2).unwrap();
-        SubTransformer { source: *source, destination: *destination, range: *range }
-    }
-}
+use ranges::DivisibleRange;
+use sub_transformer::SubTransformer;
 
 
 /// Description
@@ -283,8 +65,7 @@ impl Transformer {
                     if *number < next_sub.source && *number >= sub_transformer.source {
                         sub_transformer.transform_number(number);
                         break;
-                    } else {
-                    } 
+                    }
                 },
                 None => {
                     sub_transformer.transform_number(number);
@@ -303,24 +84,33 @@ impl Transformer {
     /// ------
     /// :range: &mut DivisibleRange
     /// The range to transform/divide.
-    pub fn transform_range(&mut self, range: &mut range::DivisibleRange) {
-        for index in 0..self.sub_transformers.len() {
-            let sub_transformer = self.sub_transformers.get(index).unwrap();
-            let next_sub_transformer = self.sub_transformers.get(index + 1);
-            match next_sub_transformer {
-                Some(next_sub) => {
-                    if *number < next_sub.source && *number >= sub_transformer.source {
-                        sub_transformer.transform_range(number);
-                        break;
-                    } else {
-                    } 
+    pub fn transform_range(&mut self, range: &mut DivisibleRange) -> Vec<DivisibleRange> {
+        let mut transformed_ranges: Vec<DivisibleRange> = vec![];
+        let mut leftover_range = true;
+        for sub_transformer in self.sub_transformers.iter() {
+            let (touched_ranges_maybe, untouched_range_maybe) = sub_transformer.transform_range(range);
+            match touched_ranges_maybe {
+                Some(touched_ranges) => {
+                    for touched_range in touched_ranges.iter() {
+                        transformed_ranges.push(touched_range.clone());
+                    }
+                },
+                None => {},
+            }
+            match untouched_range_maybe {
+                Some(untouched_range) => {
+                    *range = untouched_range;
                 },
                 None => {
-                    sub_transformer.transform_range(number);
+                    leftover_range = false;
                     break;
                 },
             }
         }
+        if leftover_range {
+            transformed_ranges.push(range.clone());
+        }
+        transformed_ranges
     }
 
     /// Description
@@ -353,11 +143,21 @@ impl Transformer {
     ///
     /// :seeds: &mut Vec<u64>
     /// The seeds to transform with the transformer.
-    pub fn transform_seed_ranges(&mut self, seed_ranges: &mut Vec<range::DivisibleRange>) {
-        for seed in seeds.iter_mut() {
+    ///
+    /// Return
+    /// ------
+    /// Vec<DivisibleRange>
+    /// The vector of transformed seed ranges.
+    pub fn transform_seed_ranges(&mut self, seed_ranges: &mut Vec<DivisibleRange>) -> Vec<DivisibleRange> {
+        let mut transformed_seed_ranges = vec![];
+        for seed_range in seed_ranges.iter_mut() {
             println!("Range Pre-Transform: {:?}", seed_range);
-            self.transform_range(seed);
-            println!("Transformed Range: {:?}", seeds);
+            let transformed_seed_range = self.transform_range(seed_range);
+            for range in transformed_seed_range.iter() {
+                transformed_seed_ranges.push(range.clone());
+            }
+            println!("Transformed Range: {:?}", seed_range);
         }
+        transformed_seed_ranges
     }
 }
