@@ -136,13 +136,13 @@ impl SubTransformer {
         if range.top < self.source {
             return (Some(vec![range.clone()]), None);
         }
-        else if range.bottom > self.top_number() {
+        else if range.bottom > transformer_top {
             return (None, Some(range.clone()));
         }
         // T:    |-------|
         // R: |-------|
         // Returns: 2
-        else if range.top >= self.source && range.top <= transformer_top && range.bottom < self.source {
+        else if self.is_in_range(range.top) && !self.is_in_range(range.bottom) {
             let divided_range = range.divide_at(self.source - 1);
             let bottom_range = divided_range.get(0).unwrap();
             let top_range = divided_range.get(1).unwrap();
@@ -152,14 +152,14 @@ impl SubTransformer {
         // T: |----------|
         // R:   |-------|
         // Returns: 1
-        else if range.top <= transformer_top && range.bottom >= self.source {
+        else if self.is_in_range(range.top) && self.is_in_range(range.bottom) {
             let transformed_range = self.transform_range_numbers(range);
             return (Some(vec![transformed_range.clone()]), None);
         }
         // T: |----------|
         // R:        |-------|
         // Returns: 2
-        else if range.bottom <= transformer_top && range.top > transformer_top {
+        else if self.is_in_range(range.bottom) && !self.is_in_range(range.top) {
             let divided_range = range.divide_at(transformer_top);
             let bottom_range = divided_range.get(0).unwrap();
             let top_range = divided_range.get(1).unwrap();
@@ -202,7 +202,7 @@ impl SubTransformer {
     /// False if the DivisibleRange does not overlaps with the source range
     /// of this sub transformer.
     pub fn is_range_in_range(&self, range: DivisibleRange) -> bool {
-        self.is_in_range(range.bottom) || self.is_in_range(range.top)
+        self.is_in_range(range.bottom) && self.is_in_range(range.top)
     }
 
     /// Description
