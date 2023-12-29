@@ -3,6 +3,8 @@ mod common;
 /// Description
 /// -----------
 /// The main program for day 6.
+/// It solves part 1 or 2 with the same method, just changes how the input is
+/// parsed.
 fn main() {
     let (line, part) = common::get_file_and_part();
     let mut times: Vec<u64> = vec![];
@@ -43,6 +45,21 @@ fn main() {
 /// Returns the number of options available to hold to start given a
 /// particular chosen time and distance.
 ///
+/// The formula for how long the time the button is held goes as follows:
+///
+/// distance = (time - x) * x;
+/// distance = time * x - x.pow(2);
+/// 0 = -x.pow(2) + time * x - distance;
+///
+/// which is solvable by the quadratic formula:
+///
+/// 0 = -x.pow(2) + time * x - distance;
+///   a=-1;       b=time;  c=- distance;
+///
+///     -b +/- sqrt(b.pow(2) - 4ac)
+/// x = --------------------------
+///               2a
+///
 /// Params
 /// ------
 /// :time: u64
@@ -57,20 +74,6 @@ fn main() {
 /// The number of options for how long to hold the start for.
 fn options(time: &u64, distance: &u64) -> u64 {
     println!("{} = ({} * x) - x**2", distance, time);
-    // distance = (time - x) * x;
-    // distance = time * x - x.pow(2);
-    // 0 = -x.pow(2) + time * x - distance;
-    // 0 = (x - time) * (-x + time); // where time * time = distance at the zero case
-    // max will always be at time / 2
-    // where > some number though...
-    // 12 and 18 for 216... so at time where == 216, then it is all the +/- from the peak from there...
-    // 9 = (7 - x) * x;
-    // 9 = 7*x - x.pow(2);
-    // 0 = -x.pow(2) + 7*x - 9;
-    // 0 = (x + ) * (-x + )
-    // -b +/- (b**2 - 4ac)**(0.5)
-    // --------------------------
-    //           2a
     let a = -1.0;
     let b = *time as f64;
     let c = -1.0 * *distance as f64;
@@ -79,6 +82,9 @@ fn options(time: &u64, distance: &u64) -> u64 {
     let min_number = (negative_b + sqrt_b_squared_minus_4ac) / (2.0 * a);
     let max_number = (negative_b - sqrt_b_squared_minus_4ac) / (2.0 * a);
     let mut lower = min_number.ceil() as u64;
+    // In the case where the integer falls right on the line where it ties
+    // the current record, we need to add/subtract one from the lower/upper
+    // because we need to BEAT the record not tie it.
     if min_number == lower as f64 {
         lower += 1;
     }
