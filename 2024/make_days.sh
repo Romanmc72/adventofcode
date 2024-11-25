@@ -24,7 +24,7 @@ import (
 
 //go:embed data/$day_text/input.txt
 var real${day_text}Data []byte
-//go:embed data/$day_text/input.txt
+//go:embed data/$day_text/example.txt
 var example${day_text}Data []byte
 
 func Solve$day_text(part int, example bool) error {
@@ -44,7 +44,6 @@ func Solve$day_text(part int, example bool) error {
   }
   return nil
 }
-
 EOF
   echo "Day ${day_text} has been populated"
 
@@ -98,10 +97,10 @@ main() {
                     start_day=$1
                     end_day=$2
                     if [[
-                      $($start_day || $(($SMALLEST_DAY-1))) -lt $SMALLEST_DAY
-                      || $($start_day || $((LARGEST_DAY+1))) -gt $LARGEST_DAY
-                      || $($end_day || $(($SMALLEST_DAY-1))) -lt $SMALLEST_DAY
-                      || $($end_day || $(($LARGEST_DAY+1))) -gt $LARGEST_DAY
+                      $start_day -lt $SMALLEST_DAY
+                      || $start_day -gt $LARGEST_DAY
+                      || $end_day -lt $SMALLEST_DAY
+                      || $end_day -gt $LARGEST_DAY
                     ]]
                     then
                       echo "Need to use integers ${SMALLEST_DAY}-${LARGEST_DAY} for the days"

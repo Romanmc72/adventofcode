@@ -9,7 +9,7 @@ import (
 
 //go:embed data/05/input.txt
 var real05Data []byte
-//go:embed data/05/input.txt
+//go:embed data/05/example.txt
 var example05Data []byte
 
 func Solve05(part int, example bool) error {
@@ -29,4 +29,3 @@ func Solve05(part int, example bool) error {
   }
   return nil
 }
-
