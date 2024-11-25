@@ -12,9 +12,7 @@ Going to try and "trace" all the edges of the sensors to find a spot
 inside the grid that does not have any sensors detecting it.
 """
 import multiprocessing
-from copy import deepcopy
 from multiprocessing import Pool
-from pprint import pprint
 from typing import List, Set, Tuple
 
 from input import get_data
@@ -51,7 +49,7 @@ def main1():
     the test data as well, it just does not have a nice visual element.
     """
     print("Creating map")
-    map = Map.from_raw_data(get_data("test.txt"))
+    map = Map.from_raw_data(get_data("example.txt"))
     print("Created map")
     print(map)
     map.scan_sensor_data()
