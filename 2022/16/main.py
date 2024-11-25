@@ -9,17 +9,19 @@ Part 2
 
 
 """
+from time import sleep
 
-
-def get_data():
-    with open("input.txt", "r") as f:
-        data = f.read()
-    return data.split("\n")
+from input import get_data
+from pipeline.path import Path
+from pipeline.pipe import Pipe
 
 
 def main1():
-    pass
-
+    # pipe = Pipe.from_raw_input(get_data("example.txt"))
+    pipe = Pipe.from_raw_input(get_data())
+    path = Path(pipe.clone())
+    print(pipe)
+    return pipe, path
 
 def main2():
     pass
