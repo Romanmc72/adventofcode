@@ -5,21 +5,21 @@ import (
 )
 
 func TestDayToFolder(t *testing.T) {
-	type args struct{
-		day int
+	type args struct {
+		day  int
 		want string
 	}
 	testCases := []args{
 		{
-			day: 1,
+			day:  1,
 			want: "01",
 		},
 		{
-			day: 10,
+			day:  10,
 			want: "10",
 		},
 		{
-			day: 2000,
+			day:  2000,
 			want: "2000",
 		},
 	}

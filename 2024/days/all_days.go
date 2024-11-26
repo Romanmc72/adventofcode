@@ -1,6 +1,6 @@
 package days
 
-type Solution func (int, bool) error
+type Solution func(int, bool) error
 
 var Solutions = []Solution{
 	Solve01,
