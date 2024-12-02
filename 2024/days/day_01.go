@@ -88,7 +88,7 @@ func parseStringToInt(line string) (int, int, error) {
 	}
 	right, err := strconv.Atoi(splits[1])
 	if err != nil {
-		return 0, 0, nil
+		return 0, 0, err
 	}
 	return left, right, nil
 }
