@@ -26,64 +26,59 @@ func Solve01(part int, example bool) error {
 	}
 	logger.Debug(data)
 
-	if part < 1 || part == 1 {
-		lines := strings.Split(data, "\n")
-		leftList := make([]int, len(lines))
-		rightList := make([]int, len(lines))
-		for index, line := range lines {
-			left, right, err := parseStringToInt(line)
-			if err != nil {
-				return err
-			}
-			leftList[index] = left
-			rightList[index] = right
+	lines := strings.Split(data, "\n")
+	leftList := make([]int, len(lines))
+	rightList := make([]int, len(lines))
+	numberMapping := make(map[int]int)
+
+	for index, line := range lines {
+		left, right, err := parseStringToInt(line)
+		if err != nil {
+			return err
 		}
-		sort.Slice(leftList, func(i, j int) bool {
-			return leftList[i] < leftList[j]
-		})
-		sort.Slice(rightList, func(i, j int) bool {
-			return rightList[i] < rightList[j]
-		})
-		totalDiff := 0
-		for index, leftItem := range leftList {
-			rightItem := rightList[index]
-			diff := leftItem - rightItem
-			if diff < 0 {
-				diff = -diff
-			}
-			totalDiff += diff
+		leftList[index] = left
+		rightList[index] = right
+		rightP, ok := numberMapping[right]
+		if !ok {
+			numberMapping[right] = 1
+		} else {
+			numberMapping[right] = rightP + 1
 		}
-		fmt.Println("Day 01 Part 2 Solution:")
-		fmt.Println(totalDiff)
 	}
 
+	if part < 1 || part == 1 {
+		part1(leftList, rightList)
+	}
 	if part < 1 || part == 2 {
-		numberMapping := make(map[int]int)
-		lines := strings.Split(data, "\n")
-		leftList := make([]int, len(lines))
-		for index, line := range lines {
-			left, right, err := parseStringToInt(line)
-			leftList[index] = left
-			if err != nil {
-				return err
-			}
-			rightP, ok := numberMapping[right]
-			if !ok {
-				numberMapping[right] = 1
-			} else {
-				numberMapping[right] = rightP + 1
-			}
-		}
-		fmt.Printf("%v", numberMapping)
-		totalValue := 0
-		for _, leftVal := range leftList {
-			p := numberMapping[leftVal]
-			totalValue += leftVal * p
-		}
-		fmt.Println("Day 01 Part 2 Solution:")
-		fmt.Println(totalValue)
+		part2(leftList, numberMapping)
 	}
 	return nil
+}
+
+func part1(leftList []int, rightList []int) {
+	sort.Ints(leftList)
+	sort.Ints(rightList)
+	totalDiff := 0
+	for index, leftItem := range leftList {
+		rightItem := rightList[index]
+		diff := leftItem - rightItem
+		if diff < 0 {
+			diff = -diff
+		}
+		totalDiff += diff
+	}
+	fmt.Println("Day 01 Part 2 Solution:")
+	fmt.Println(totalDiff)
+}
+
+func part2(leftList []int, numberMapping map[int]int) {
+	totalValue := 0
+	for _, leftVal := range leftList {
+		p := numberMapping[leftVal]
+		totalValue += leftVal * p
+	}
+	fmt.Println("Day 01 Part 2 Solution:")
+	fmt.Println(totalValue)
 }
 
 // Parse a line of string and receive a pair of integers or an error if the
