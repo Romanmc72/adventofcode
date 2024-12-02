@@ -31,7 +31,7 @@ func Solve01(part int, example bool) error {
 		leftList := make([]int, len(lines))
 		rightList := make([]int, len(lines))
 		for index, line := range lines {
-			left, right, err := parse(line)
+			left, right, err := parseStringToInt(line)
 			if err != nil {
 				return err
 			}
@@ -62,7 +62,7 @@ func Solve01(part int, example bool) error {
 		lines := strings.Split(data, "\n")
 		leftList := make([]int, len(lines))
 		for index, line := range lines {
-			left, right, err := parse(line)
+			left, right, err := parseStringToInt(line)
 			leftList[index] = left
 			if err != nil {
 				return err
@@ -86,7 +86,9 @@ func Solve01(part int, example bool) error {
 	return nil
 }
 
-func parse(line string) (int, int, error) {
+// Parse a line of string and receive a pair of integers or an error if the
+// integers were not parsable from the string
+func parseStringToInt(line string) (int, int, error) {
 	splits := strings.Split(line, "   ")
 	
 	left, err := strconv.Atoi(splits[0])
