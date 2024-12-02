@@ -64,7 +64,6 @@ func Solve01(part int, example bool) error {
 		for index, line := range lines {
 			left, right, err := parse(line)
 			leftList[index] = left
-			logger.Debug("what the H?", "left", left, "right", right)
 			if err != nil {
 				return err
 			}
