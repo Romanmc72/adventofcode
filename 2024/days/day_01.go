@@ -6,8 +6,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-
-	"github.com/Romanmc72/adventofcode/2024/util"
 )
 
 //go:embed data/01/input.txt
@@ -17,14 +15,12 @@ var real01Data []byte
 var example01Data []byte
 
 func Solve01(part int, example bool) error {
-	logger := util.GetLogger()
 	var data string
 	if example {
 		data = string(example01Data)
 	} else {
 		data = string(real01Data)
 	}
-	logger.Debug(data)
 
 	lines := strings.Split(data, "\n")
 	leftList := make([]int, len(lines))
