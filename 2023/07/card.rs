@@ -1,5 +1,7 @@
 /// Description
 /// -----------
+/// A card in camel cards. It is represented by a
+/// single character and a point value.
 pub struct Card {
     symbol: char,
     value: u8,
@@ -8,6 +10,17 @@ pub struct Card {
 impl Card {
     /// Description
     /// -----------
+    /// Return a card from a parsed character value
+    ///
+    /// Params
+    /// ------
+    /// :character: char
+    /// The character to parse to a card.
+    ///
+    /// Return
+    /// ------
+    /// Card
+    /// The card that was parsed from the character
     pub fn from_char(character: char) -> Card {
         match character {
             'A' => Card { symbol: character, value: 0 },
