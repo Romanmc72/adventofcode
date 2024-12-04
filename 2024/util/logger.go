@@ -13,7 +13,7 @@ var levelMap = map[string]slog.Leveler{
 	"ERROR": slog.LevelError,
 }
 
-// Get the logger at the level of your choice! Set GO_LOG_LEVEL env var to change the level.
+// Get the logger at the level of your choice! Set LOG_LEVEL env var to change the level.
 func GetLogger() *slog.Logger {
 	levelText, ok := os.LookupEnv("LOG_LEVEL")
 	var level slog.Leveler
