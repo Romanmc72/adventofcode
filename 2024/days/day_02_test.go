@@ -42,6 +42,16 @@ func TestDay2Part2(t *testing.T) {
 			desc: "removing the third element makes it valid",
 		},
 		{
+			report: []int{10, 11, 13, 12, 17},
+			safe: false,
+			desc: "removing the third element makes it valid except it makes the gap too large!",
+		},
+		{
+			report: []int{28, 27, 31, 32, 35, 37},
+			safe: false,
+			desc: "removing the second element makes it valid and the gap does not close",
+		},
+		{
 			report: []int{1, 2, 3, 2, 1},
 			safe: false,
 			desc: "multiple violations are at play",
