@@ -56,7 +56,7 @@ func Solve03(part int, example bool) error {
 				do = parseDosAndDonts(each)
 			}
 		}
-		fmt.Println("Day 03 Part 1 Solution: ", total)
+		fmt.Println("Day 03 Part 2 Solution: ", total)
 	}
 	return nil
 }
