@@ -3,6 +3,7 @@ package days
 import (
 	_ "embed"
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -67,58 +68,15 @@ func isSafe(report []int) bool {
 	return true
 }
 
-// Need to establish the overall order and return if it
-// is violated but not track its ongoing state
-// The list order can be determined definitively using the first
-// 4 elements even if the error occurs in one of those positions.
-//   {1, 2, 3, 4} ASC
-//   {3, 2, 1, 0} DESC
-//   {1, 5, 3, 4} ASC
-//   {5, 1, 3, 4, ...} ASC   (remove first)
-//   {1, 3, 2, 4, ...} ASC   (remove second)
-//   {1, 2, 5, 4, ...} ASC   (remove third)
-//   {2, 1, 3, 4} ERROR (jagged)
+// brute force. it is fine. leave me alone
 func isSafe2(report []int) bool {
 	if len(report) <= 2 { return true }
-	mulligan := true
-	moveUpTheRear := false
-	ptr := 1
-	leadPtr := 2
-	previousOrder := false
-	for (leadPtr < len(report)) {
-		this := report[ptr]
-		next := report[leadPtr]
-		newOrder := this > next
-		if ptr > 0 {
-			if previousOrder != newOrder {
-				if !mulligan {
-					return false
-				}
-				mulligan = false
-				leadPtr += 1
-				moveUpTheRear = true
-				continue
-			}
+	for index := 0; index < len(report); index++ {
+		if isSafe(slices.Concat(report[:index], report[index+1:])) {
+			return true
 		}
-		if !isSafeDistance(next, this) {
-			if !mulligan {
-				return false
-			}
-			mulligan = false
-			leadPtr += 1
-			moveUpTheRear = true
-			continue
-		}
-		if moveUpTheRear {
-			ptr += 2
-			moveUpTheRear = false
-		} else {
-			ptr += 1
-		}
-		leadPtr += 1
-		previousOrder = newOrder
 	}
-	return true
+	return false
 }
 
 func isSafeDistance(num1 int, num2 int) bool {
