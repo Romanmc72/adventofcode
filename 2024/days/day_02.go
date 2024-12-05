@@ -29,7 +29,9 @@ func Solve02(part int, example bool) error {
 	safeReports2 := 0
 	for _, line := range strings.Split(data, "\n") {
 		report, err := parseLineToListOfInts(line, " ")
-		if err != nil { return err }
+		if err != nil {
+			return err
+		}
 		if isSafe(report) {
 			safeReports += 1
 		}
@@ -47,12 +49,14 @@ func Solve02(part int, example bool) error {
 }
 
 func isSafe(report []int) bool {
-	if len(report) <= 1 { return true }
+	if len(report) <= 1 {
+		return true
+	}
 	ptr := 0
 	previousOrder := false
-	for (ptr < len(report) - 1) {
+	for ptr < len(report)-1 {
 		this := report[ptr]
-		next := report[ptr + 1]
+		next := report[ptr+1]
 		newOrder := this > next
 		if ptr > 0 {
 			if previousOrder != newOrder {
@@ -70,7 +74,9 @@ func isSafe(report []int) bool {
 
 // brute force. it is fine. leave me alone
 func isSafe2(report []int) bool {
-	if len(report) <= 2 { return true }
+	if len(report) <= 2 {
+		return true
+	}
 	for index := 0; index < len(report); index++ {
 		if isSafe(slices.Concat(report[:index], report[index+1:])) {
 			return true

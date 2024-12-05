@@ -35,7 +35,9 @@ func Solve04(part int, example bool) error {
 				finds += matrix.vivaMas(columnNum, rowNum)
 			}
 			if character == 'A' {
-				if matrix.assMM(columnNum, rowNum) { xMASFinds++ }
+				if matrix.assMM(columnNum, rowNum) {
+					xMASFinds++
+				}
 			}
 		}
 	}
@@ -54,15 +56,15 @@ type RuneMatrix struct {
 
 func (rm *RuneMatrix) mas(x int, y int, xmod int, ymod int) bool {
 	if rm.checkCharAtDirection(x, y, xmod, ymod, 'M') {
-		if rm.checkCharAtDirection(x, y, xmod * 2, ymod * 2, 'A') {
-			return rm.checkCharAtDirection(x, y, xmod * 3, ymod * 3, 'S')
+		if rm.checkCharAtDirection(x, y, xmod*2, ymod*2, 'A') {
+			return rm.checkCharAtDirection(x, y, xmod*3, ymod*3, 'S')
 		}
 	}
 	return false
 }
 
 func (rm *RuneMatrix) checkCharAtDirection(x int, y int, xmod int, ymod int, char byte) bool {
-	return rm.Matrix[y + ymod][x + xmod] == char
+	return rm.Matrix[y+ymod][x+xmod] == char
 }
 
 // Also because we are looking for "MAS" since we already found the "X" at this point
@@ -74,28 +76,44 @@ func (rm *RuneMatrix) vivaMas(x int, y int) int {
 	left := rm.canGoLeft(x)
 	right := rm.canGoRight(x)
 	if up {
-		if rm.mas(x, y, 0, -1) { total++ }
+		if rm.mas(x, y, 0, -1) {
+			total++
+		}
 	}
 	if up && left {
-		if rm.mas(x, y, -1, -1) { total++ }
+		if rm.mas(x, y, -1, -1) {
+			total++
+		}
 	}
 	if up && right {
-		if rm.mas(x, y, 1, -1) { total++ }
+		if rm.mas(x, y, 1, -1) {
+			total++
+		}
 	}
 	if down && left {
-		if rm.mas(x, y, -1, 1) { total++ }
+		if rm.mas(x, y, -1, 1) {
+			total++
+		}
 	}
 	if down {
-		if rm.mas(x, y, 0, 1) { total++ }
+		if rm.mas(x, y, 0, 1) {
+			total++
+		}
 	}
 	if down && right {
-		if rm.mas(x, y, 1, 1) { total++ }
+		if rm.mas(x, y, 1, 1) {
+			total++
+		}
 	}
 	if left {
-		if rm.mas(x, y, -1, 0) { total++ }
+		if rm.mas(x, y, -1, 0) {
+			total++
+		}
 	}
 	if right {
-		if rm.mas(x, y, 1, 0) { total++ }
+		if rm.mas(x, y, 1, 0) {
+			total++
+		}
 	}
 	return total
 }
@@ -120,10 +138,12 @@ func (rm *RuneMatrix) canGoRight(x int) bool {
 // but it checks for the MM then the "SS" after if the
 // "MM" is found since we already have "A"
 func (rm *RuneMatrix) assMM(x int, y int) bool {
-	if x == 0 || x == (len(rm.Matrix[0]) - 1) || y == 0 || y == (len(rm.Matrix) - 1) { return false }
+	if x == 0 || x == (len(rm.Matrix[0])-1) || y == 0 || y == (len(rm.Matrix)-1) {
+		return false
+	}
 	xmod, ymod, ok := rm.hasMM(x, y)
 	if ok {
-		return rm.hasSS(x, y, -1 * xmod, -1 * ymod)
+		return rm.hasSS(x, y, -1*xmod, -1*ymod)
 	}
 	return ok
 }

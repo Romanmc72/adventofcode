@@ -81,7 +81,7 @@ func part2(leftList []int, numberMapping map[int]int) {
 // integers were not parsable from the string
 func parseStringToInt(line string) (int, int, error) {
 	splits := strings.Split(line, "   ")
-	
+
 	left, err := strconv.Atoi(splits[0])
 	if err != nil {
 		return 0, 0, err
