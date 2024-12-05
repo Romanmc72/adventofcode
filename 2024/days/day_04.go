@@ -117,6 +117,8 @@ func (rm *RuneMatrix) canGoRight(x int) bool {
 }
 
 // cuz this lil elf is an ass and I hate him
+// but it checks for the MM then the "SS" after if the
+// "MM" is found since we already have "A"
 func (rm *RuneMatrix) assMM(x int, y int) bool {
 	if x == 0 || x == (len(rm.Matrix[0]) - 1) || y == 0 || y == (len(rm.Matrix) - 1) { return false }
 	xmod, ymod, ok := rm.hasMM(x, y)
