@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"fmt"
 
+	"github.com/Romanmc72/adventofcode/2024/day6"
 	"github.com/Romanmc72/adventofcode/2024/util"
 )
 
@@ -21,12 +22,18 @@ func Solve06(part int, example bool) error {
 	} else {
 		data = string(real06Data)
 	}
-	logger.Debug(data)
+	matrix := day6.NewMatrixFromData(data)
 	if part < 1 || part == 1 {
-		fmt.Println("Day 06 Part 1 Solution: _____")
+		err := matrix.Walk()
+		if err != nil {
+			logger.Error("lol it broke!", "error", err)
+		}
+		fmt.Println("Day 06 Part 1 Solution:", matrix.CountVisitedSpots())
 	}
 	if part < 1 || part == 2 {
-		fmt.Println("Day 06 Part 2 Solution: _____")
+		matrix.FindBlockableSpots()
+		fmt.Println("Day 06 Part 2 Solution:", matrix.CountBlockableSpots())
+		fmt.Print(matrix)
 	}
 	return nil
 }
