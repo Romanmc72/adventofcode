@@ -95,7 +95,10 @@ func Solve07(part int, example bool) error {
 		}
 		if eq.IsCalibrated(1) {
 			part1Total += eq.Total
+			part2Total += eq.Total
+			continue
 		}
+		if part == 1 { continue }
 		if eq.IsCalibrated(2) {
 			part2Total += eq.Total
 		}
