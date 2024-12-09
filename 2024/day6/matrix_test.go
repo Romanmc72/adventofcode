@@ -5,6 +5,27 @@ import (
 	"testing"
 )
 
+func TestMatrixString(t *testing.T) {
+	data := strings.Join([]string{
+		"..#.....",
+		"......#.",
+		"........",
+		"..^.....",
+	}, "\n")
+	want := strings.Join([]string{
+		"..#.....",
+		"..^>>>#.",
+		"..^..v..",
+		"..^..v..",
+	}, "\n")
+	matrix := NewMatrixFromData(data)
+	matrix.Walk()
+	got := matrix.String()
+	if want != got {
+		t.Errorf("Wanted\n%s\n but got\n%s\n", want, got)
+	}
+}
+
 func TestMatrixWalk(t *testing.T) {
 	type testCase struct {
 		data    string
@@ -74,7 +95,6 @@ func TestMatrixFindBlockableSpots(t *testing.T) {
 		data     string
 		want     int
 		desc     string
-		shouldBe string
 	}
 
 	cases := []testCase{
@@ -93,18 +113,6 @@ func TestMatrixFindBlockableSpots(t *testing.T) {
 			}, "\n"),
 			want: 6,
 			desc: "example data",
-			shouldBe: strings.Join([]string{
-				"....#.....",
-				".........#",
-				"..........",
-				"..#.......",
-				".......#..",
-				"..........",
-				".#.O.....>",
-				"......OO#.",
-				"#O.O......",
-				"......#O..",
-			}, "\n"),
 		},
 		{
 			data: strings.Join([]string{
@@ -115,12 +123,6 @@ func TestMatrixFindBlockableSpots(t *testing.T) {
 			}, "\n"),
 			want: 1,
 			desc: "should have 1 blockable spot",
-			shouldBe: strings.Join([]string{
-				"..#.....",
-				"......#.",
-				".O......",
-				"....v#..",
-			}, "\n"),
 		},
 		{
 			data: strings.Join([]string{
@@ -131,12 +133,6 @@ func TestMatrixFindBlockableSpots(t *testing.T) {
 			}, "\n"),
 			want: 0,
 			desc: "zero blockable spots",
-			shouldBe: strings.Join([]string{
-				"..#.....",
-				"......#.",
-				"........",
-				".......>",
-			}, "\n"),
 		},
 	}
 
@@ -151,10 +147,6 @@ func TestMatrixFindBlockableSpots(t *testing.T) {
 		got := matrix.CountBlockableSpots()
 		if got != c.want {
 			t.Errorf("%s\nWanted=%d; got=%d; matrix=\n%s\n", c.desc, c.want, got, matrix)
-		}
-		is := matrix.String()
-		if is != c.shouldBe {
-			t.Errorf("Matrix looks like:\n%s\nBut should look like:\n%s\n", is, c.shouldBe)
 		}
 	}
 }

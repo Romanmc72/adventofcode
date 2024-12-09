@@ -9,10 +9,11 @@ import (
 
 type Matrix struct {
 	grid     [][]*Space
+	guardStart util.Coordinate
 	guard    *Guard
 	xBound   int
 	yBound   int
-	blockers map[util.Coordinate]interface{}
+	blockers map[util.Coordinate]bool
 	history  []Space
 }
 
@@ -35,10 +36,11 @@ func NewMatrixFromData(data string) Matrix {
 	}
 	return Matrix{
 		grid:     grid,
+		guardStart: guard.Position,
 		guard:    guard,
 		xBound:   xBound,
 		yBound:   yBound,
-		blockers: make(map[util.Coordinate]interface{}),
+		blockers: make(map[util.Coordinate]bool),
 		history: []Space{
 			grid[guard.Position.Y][guard.Position.X].Copy(),
 		},
@@ -49,7 +51,7 @@ func (m Matrix) isBlocked(spot util.Coordinate) bool {
 	return m.grid[spot.Y][spot.X].Blocked
 }
 
-func (m *Matrix) MoveGuard() error {
+func (m *Matrix) moveGuard() error {
 	spot := m.guard.NextPosition()
 	m.guard.Position = spot
 
@@ -69,7 +71,7 @@ func (m *Matrix) Walk() error {
 			m.guard.TurnRight()
 			continue
 		}
-		err := m.MoveGuard()
+		err := m.moveGuard()
 		if err != nil {
 			return err
 		}
@@ -80,8 +82,8 @@ func (m *Matrix) Walk() error {
 func (m *Matrix) FindBlockableSpots() {
 	m.Walk()
 	for len(m.history) > 1 {
-		m.WipeVisitedHistory()
-		addBarrierHere, err := m.MoonwalkGuardOneStep()
+		m.wipeVisitedHistory()
+		addBarrierHere, err := m.moonwalkGuardOneStep()
 		if err != nil {
 			break
 		}
@@ -94,10 +96,10 @@ func (m *Matrix) FindBlockableSpots() {
 		m.history = m.history[:since+1]
 		m.grid[addBarrierHere.Position.Y][addBarrierHere.Position.X].Blocked = false
 	}
-	m.WipeVisitedHistory()
+	m.wipeVisitedHistory()
 }
 
-func (m *Matrix) WipeVisitedHistory() {
+func (m *Matrix) wipeVisitedHistory() {
 	for _, row := range m.grid {
 		for _, space := range row {
 			space.Visited = false
@@ -106,7 +108,7 @@ func (m *Matrix) WipeVisitedHistory() {
 	}
 }
 
-func (m *Matrix) MoonwalkGuardOneStep() (Space, error) {
+func (m *Matrix) moonwalkGuardOneStep() (Space, error) {
 	if len(m.history) <= 1 {
 		return Space{}, fmt.Errorf("cannot go back, already at the end of the history")
 	}
@@ -119,7 +121,34 @@ func (m *Matrix) MoonwalkGuardOneStep() (Space, error) {
 }
 
 func (m Matrix) CountBlockableSpots() int {
-	return len(m.blockers)
+	possiblyBlocked := len(m.blockers)
+	actuallyBlocked := m.checkBlockableSpots()
+	if possiblyBlocked != actuallyBlocked {
+		fmt.Printf("There were %d falsely flagged spots\n", possiblyBlocked - actuallyBlocked)
+	}
+	return actuallyBlocked
+}
+
+// For some unforeseen reason, certain points are being flagged as blocking
+// when in fact they are not. The reruns the entire patrol on every spot
+// that was flagged and only counts those that do in fact create an infinite loop.
+func (m *Matrix) checkBlockableSpots() int {
+	actuallyBlocked := 0
+	for spot := range m.blockers {
+		m.wipeVisitedHistory()
+		m.grid[spot.Y][spot.X].Blocked = true
+		m.guard.Position = m.guardStart
+		m.guard.Direction = util.Coordinate{X: 0, Y: -1}
+		err := m.Walk()
+		if err != nil {
+			actuallyBlocked++
+		} else {
+			m.blockers[spot] = false
+		}
+		m.grid[spot.Y][spot.X].Blocked = false
+	}
+	m.wipeVisitedHistory()
+	return actuallyBlocked
 }
 
 func (m Matrix) CountVisitedSpots() int {
@@ -144,8 +173,12 @@ func (m Matrix) String() string {
 		rows[y] = rowOfChars
 	}
 	rows[m.guard.Position.Y][m.guard.Position.X] = m.guard.String()
-	for blockableSpot := range m.blockers {
-		rows[blockableSpot.Y][blockableSpot.X] = "O"
+	for blockableSpot, actuallyBlocked := range m.blockers {
+		if actuallyBlocked {
+			rows[blockableSpot.Y][blockableSpot.X] = "O"
+		} else {
+			rows[blockableSpot.Y][blockableSpot.X] = "X"
+		}
 	}
 	outRows := make([]string, len(m.grid))
 	for index, row := range rows {

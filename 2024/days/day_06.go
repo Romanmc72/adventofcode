@@ -33,7 +33,7 @@ func Solve06(part int, example bool) error {
 	if part < 1 || part == 2 {
 		matrix.FindBlockableSpots()
 		fmt.Println("Day 06 Part 2 Solution:", matrix.CountBlockableSpots())
-		fmt.Print(matrix)
+		fmt.Println(matrix)
 	}
 	return nil
 }
