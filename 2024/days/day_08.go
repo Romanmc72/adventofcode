@@ -121,7 +121,9 @@ func parseAntennae(data string) (map[rune][]util.Coordinate, util.Coordinate) {
 	mapBounds := util.Coordinate{Y: len(lines), X: len(lines[0])}
 	for y, line := range lines {
 		for x, char := range line {
-			if char == '.' { continue }
+			if char == '.' {
+				continue
+			}
 			coords, ok := antennae[char]
 			position := util.Coordinate{X: x, Y: y}
 			if ok {

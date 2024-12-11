@@ -8,13 +8,13 @@ import (
 )
 
 type Matrix struct {
-	grid     [][]*Space
+	grid       [][]*Space
 	guardStart util.Coordinate
-	guard    *Guard
-	xBound   int
-	yBound   int
-	blockers map[util.Coordinate]bool
-	history  []Space
+	guard      *Guard
+	xBound     int
+	yBound     int
+	blockers   map[util.Coordinate]bool
+	history    []Space
 }
 
 func NewMatrixFromData(data string) Matrix {
@@ -35,12 +35,12 @@ func NewMatrixFromData(data string) Matrix {
 		grid[yPos] = row
 	}
 	return Matrix{
-		grid:     grid,
+		grid:       grid,
 		guardStart: guard.Position,
-		guard:    guard,
-		xBound:   xBound,
-		yBound:   yBound,
-		blockers: make(map[util.Coordinate]bool),
+		guard:      guard,
+		xBound:     xBound,
+		yBound:     yBound,
+		blockers:   make(map[util.Coordinate]bool),
 		history: []Space{
 			grid[guard.Position.Y][guard.Position.X].Copy(),
 		},
@@ -124,7 +124,7 @@ func (m Matrix) CountBlockableSpots() int {
 	possiblyBlocked := len(m.blockers)
 	actuallyBlocked := m.checkBlockableSpots()
 	if possiblyBlocked != actuallyBlocked {
-		fmt.Printf("There were %d falsely flagged spots\n", possiblyBlocked - actuallyBlocked)
+		fmt.Printf("There were %d falsely flagged spots\n", possiblyBlocked-actuallyBlocked)
 	}
 	return actuallyBlocked
 }

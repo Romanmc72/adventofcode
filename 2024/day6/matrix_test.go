@@ -92,9 +92,9 @@ func TestMatrixWalk(t *testing.T) {
 
 func TestMatrixFindBlockableSpots(t *testing.T) {
 	type testCase struct {
-		data     string
-		want     int
-		desc     string
+		data string
+		want int
+		desc string
 	}
 
 	cases := []testCase{

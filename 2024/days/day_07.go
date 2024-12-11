@@ -15,7 +15,7 @@ var real07Data []byte
 var example07Data []byte
 
 type Equation struct {
-	Total int
+	Total   int
 	Numbers []int
 }
 
@@ -25,7 +25,7 @@ func Add(x int, y int) int { return x + y }
 
 func Multiply(x int, y int) int { return x * y }
 
-func Concat(x int, y int) int { return x * int(math.Pow(10.0, float64(len(strconv.Itoa(y))))) + y }
+func Concat(x int, y int) int { return x*int(math.Pow(10.0, float64(len(strconv.Itoa(y))))) + y }
 
 var operatorLookup = map[rune]Operator{
 	'0': Add,
@@ -56,25 +56,29 @@ func MakePermutations(operands int, part int) [][]Operator {
 
 func leftPad(original string, length int, pad rune) string {
 	padding := length - len(original)
-	if padding <= 0 { return original }
+	if padding <= 0 {
+		return original
+	}
 	return strings.Join([]string{strings.Repeat(string(pad), padding), original}, "")
 }
 
 func (e Equation) IsCalibrated(part int) bool {
 	operands := len(e.Numbers)
 	allOperations := MakePermutations(operands, part)
-	forEachOperation:
-		for _, op := range allOperations {
-			total := e.Numbers[0]
-			for n := 1; n < len(e.Numbers); n++ {
-				y := e.Numbers[n]
-				total = op[n - 1](total, y)
-				if total > e.Total {
-					continue forEachOperation
-				}
+forEachOperation:
+	for _, op := range allOperations {
+		total := e.Numbers[0]
+		for n := 1; n < len(e.Numbers); n++ {
+			y := e.Numbers[n]
+			total = op[n-1](total, y)
+			if total > e.Total {
+				continue forEachOperation
 			}
-			if total == e.Total { return true }
 		}
+		if total == e.Total {
+			return true
+		}
+	}
 	return false
 }
 
@@ -98,7 +102,9 @@ func Solve07(part int, example bool) error {
 			part2Total += eq.Total
 			continue
 		}
-		if part == 1 { continue }
+		if part == 1 {
+			continue
+		}
 		if eq.IsCalibrated(2) {
 			part2Total += eq.Total
 		}
@@ -111,7 +117,6 @@ func Solve07(part int, example bool) error {
 	}
 	return nil
 }
-
 
 func parseEquation(data string) (e Equation, err error) {
 	halves := strings.Split(data, ": ")
