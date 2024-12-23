@@ -22,13 +22,17 @@ func Solve09(part int, example bool) error {
 	}
 	fileSystem, err := day9.NewFileSystemFromData(data)
 	if err != nil { return err }
-	fileSystem.Compact()
-	checksum := fileSystem.Checksum()
 	if part < 1 || part == 1 {
+		fileSystem.Compact()
+		checksum := fileSystem.Checksum()
 		fmt.Println("Day 09 Part 1 Solution:", checksum)
 	}
 	if part < 1 || part == 2 {
-		fmt.Println("Day 09 Part 2 Solution: _____")
+		fmt.Printf("Files Pre\n%s\n", fileSystem.FileString())
+		fileSystem.Defrag()
+		fmt.Printf("Files Post\n%s\n", fileSystem.FileString())
+		checksum := fileSystem.ChecksumFiles()
+		fmt.Println("Day 09 Part 2 Solution:", checksum)
 	}
 	return nil
 }

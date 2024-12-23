@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func TestDefragFileSystemAndChecksum(t *testing.T) {
+func TestCompactAndDefragFileSystemAndChecksum(t *testing.T) {
 	// the example input
 	input := "2333133121414131402"
 	fs, err := NewFileSystemFromData(input)
@@ -29,7 +29,7 @@ func TestDefragFileSystemAndChecksum(t *testing.T) {
 	}()
 	select {
 		case <- timeout:
-			t.Fatalf("Defrag timed out after %d seconds", timeoutSec)
+			t.Fatalf("Compact timed out after %d seconds", timeoutSec)
 		case <- done:
 	}
 	want = "[0][0][9][9][8][1][1][1][8][8][8][2][7][7][7][3][3][3][6][4][4][6][5][5][5][5][6][6](.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"
@@ -40,7 +40,57 @@ func TestDefragFileSystemAndChecksum(t *testing.T) {
 	wantNum := 1928
 	gotNum := fs.Checksum()
 	if wantNum != gotNum {
-		t.Errorf("Defrag() && Checksum(), wanted=%d but got=%d", wantNum, gotNum)
+		t.Errorf("Compact() && Checksum(), wanted=%d but got=%d", wantNum, gotNum)
+	}
+	want = "[0:2](.:3)[1:3](.:3)[2:1](.:3)[3:3](.:1)[4:2](.:1)[5:4](.:1)[6:4](.:1)[7:3](.:1)[8:4][9:2]"
+	got = fs.FileString()
+	if want != got {
+		t.Errorf("Wanted FileString()=\n%s\nbut got=\n%s\n", want, got)
+	}
+	fs.Defrag()
+	want = "[0:2][9:2][2:1][1:3][7:3](.:1)[4:2](.:1)[3:3](.:1)(.:2)(.:1)[5:4](.:1)[6:4](.:1)(.:3)(.:1)[8:4](.:2)"
+	got = fs.FileString()
+	if want != got {
+		t.Errorf("Wanted FileString()=\n%s\nbut got=\n%s\n", want, got)
+	}
+	wantNum = 2858
+	gotNum = fs.ChecksumFiles()
+	if wantNum != gotNum {
+		t.Errorf("Wanted %d but got %d for the Defrag() and ChecksumFiles() combo", wantNum, gotNum)
+	}
+}
+
+func TestDefragAndChecksumEdgeCases(t *testing.T) {
+	// edge cases that were not covered are cases where there is consecutive
+	// empty space which could and should raise an error
+	input := "14048"
+	_, err := NewFileSystemFromData(input)
+	if err == nil {
+		t.Errorf("Wanted an error but got=nil creating edge cases for file system of\n%s\n", input)
+	}
+	// when empty spaces are moved around they should reconstruct connecting and
+	// combining with one another to create a single empty space
+	// instead of up to several consecutive empty ones.
+	input = "143280301"
+	fs, err := NewFileSystemFromData(input)
+	if err != nil {
+		t.Errorf("Wanted err=nil but got err=%s", err)
+	}
+	wantFs := "[0:1](.:4)[1:3](.:2)[2:8][3:3][4:1]"
+	gotFs := fs.FileString()
+	if wantFs != gotFs {
+		t.Errorf("Wanted=%s but got %s for pre-defrag edge case", wantFs, gotFs)
+	}
+	fs.Defrag()
+	wantFs = "[0:1][4:1][3:3][1:3](.:2)[2:8](.:3)(.:1)"
+	gotFs = fs.FileString()
+	if wantFs != gotFs {
+		t.Errorf("Wanted=\n%s\nbut got=\n%s\nfor post-defrag edge case", wantFs, gotFs)
+	}
+	want := 265
+	got := fs.ChecksumFiles()
+	if want != got {
+		t.Errorf("Wanted=\n%d\nbut got=\n%d\nfor defrag edge cases", want, got)
 	}
 }
 
