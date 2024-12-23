@@ -3,28 +3,30 @@ package day9
 import "fmt"
 
 type File struct {
-	Empty bool
-	Size int
-	FileId int
-	NextFile *File
+	Empty        bool
+	Size         int
+	FileId       int
+	NextFile     *File
 	PreviousFile *File
 }
 
 func (f *File) SplitEmpty(space int) (*File, *File) {
-	if !f.Empty || f.Size <= space { return nil, nil }
+	if !f.Empty || f.Size <= space {
+		return nil, nil
+	}
 	left := File{
-		Empty: true,
-		Size: space,
-		NextFile: nil,
+		Empty:        true,
+		Size:         space,
+		NextFile:     nil,
 		PreviousFile: f.PreviousFile,
-		FileId: 0,
+		FileId:       0,
 	}
 	right := File{
-		Empty: true,
-		Size: f.Size - space,
-		NextFile: f.NextFile,
+		Empty:        true,
+		Size:         f.Size - space,
+		NextFile:     f.NextFile,
 		PreviousFile: &left,
-		FileId: 0,
+		FileId:       0,
 	}
 	left.NextFile = &right
 	f.PreviousFile.NextFile = &left
@@ -34,15 +36,18 @@ func (f *File) SplitEmpty(space int) (*File, *File) {
 	return &left, &right
 }
 
-
 func (f File) String() string {
-	if f.Empty { return fmt.Sprintf("(.:%d)", f.Size) }
+	if f.Empty {
+		return fmt.Sprintf("(.:%d)", f.Size)
+	}
 	return fmt.Sprintf("[%d:%d]", f.FileId, f.Size)
 }
 
 // Move the pointers around!
 func (f *File) SwapSpots(other *File) {
-	if f == other || other == nil { return }
+	if f == other || other == nil {
+		return
+	}
 
 	// in the event that these 2 are adjacent already, then we need
 	// to not have them point to themselves on a swap.
@@ -93,4 +98,3 @@ func (f *File) SwapSpots(other *File) {
 	}
 	f.NextFile = otherNext
 }
-

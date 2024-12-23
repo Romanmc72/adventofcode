@@ -28,9 +28,9 @@ func TestCompactAndDefragFileSystemAndChecksum(t *testing.T) {
 		done <- true
 	}()
 	select {
-		case <- timeout:
-			t.Fatalf("Compact timed out after %d seconds", timeoutSec)
-		case <- done:
+	case <-timeout:
+		t.Fatalf("Compact timed out after %d seconds", timeoutSec)
+	case <-done:
 	}
 	want = "[0][0][9][9][8][1][1][1][8][8][8][2][7][7][7][3][3][3][6][4][4][6][5][5][5][5][6][6](.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"
 	got = fs.String()

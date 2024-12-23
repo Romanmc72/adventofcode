@@ -7,8 +7,8 @@ import (
 )
 
 type FileSystem struct {
-	Head *FileBlock
-	Tail *FileBlock
+	Head     *FileBlock
+	Tail     *FileBlock
 	HeadFile *File
 	TailFile *File
 }
@@ -16,7 +16,7 @@ type FileSystem struct {
 func (fs *FileSystem) Defrag() {
 	head := fs.HeadFile
 	tail := fs.TailFile
-	controlLoop:
+controlLoop:
 	for tail != nil && tail.PreviousFile != nil {
 		// get the next empty head...
 		for !head.Empty {
@@ -71,7 +71,7 @@ func (fs *FileSystem) Compact() {
 	var highestFileId int
 	head := fs.Head
 	tail := fs.Tail
-	controlLoop:
+controlLoop:
 	for head.NextFileBlock != nil && tail.PreviousFileBlock != nil {
 		for !head.Empty {
 			if head.NextFileBlock == nil {
@@ -172,24 +172,26 @@ func NewFileSystemFromData(data string) (fileSystem FileSystem, err error) {
 		if isFileBlock {
 			fileId := i / 2
 			fileSize, err := strconv.Atoi(individualPieces[i])
-			if err != nil { return fileSystem, err }
+			if err != nil {
+				return fileSystem, err
+			}
 			if fileSize == 0 {
 				return fileSystem, fmt.Errorf("file blocks must be of size 0 or greater, block id=%d was size zero at position=%d", fileId, i)
 			}
 			if file == nil {
 				file = &File{
-					FileId: fileId,
-					Size: fileSize,
-					Empty: false,
+					FileId:       fileId,
+					Size:         fileSize,
+					Empty:        false,
 					PreviousFile: nil,
 				}
 				fileSystem.HeadFile = file
 			} else {
 				previous = file
 				file = &File{
-					FileId: fileId,
-					Size: fileSize,
-					Empty: false,
+					FileId:       fileId,
+					Size:         fileSize,
+					Empty:        false,
 					PreviousFile: previous,
 				}
 				previous.NextFile = file
@@ -206,13 +208,15 @@ func NewFileSystemFromData(data string) (fileSystem FileSystem, err error) {
 			}
 		} else {
 			emptySpaces, err := strconv.Atoi(individualPieces[i])
-			if err != nil { return fileSystem, err }
+			if err != nil {
+				return fileSystem, err
+			}
 			if emptySpaces > 0 {
 				previous = file
 				file = &File{
-					Empty: true,
-					FileId: 0,
-					Size: emptySpaces,
+					Empty:        true,
+					FileId:       0,
+					Size:         emptySpaces,
 					PreviousFile: previous,
 				}
 				previous.NextFile = file

@@ -3,20 +3,24 @@ package day9
 import "fmt"
 
 type FileBlock struct {
-	FileId int
-	Empty bool
-	NextFileBlock *FileBlock
+	FileId            int
+	Empty             bool
+	NextFileBlock     *FileBlock
 	PreviousFileBlock *FileBlock
 }
 
 func (fb FileBlock) String() string {
-	if fb.Empty { return "(.)" }
+	if fb.Empty {
+		return "(.)"
+	}
 	return fmt.Sprintf("[%d]", fb.FileId)
 }
 
 // Move the pointers around!
 func (fb *FileBlock) SwapSpots(other *FileBlock) {
-	if fb == other || other == nil { return }
+	if fb == other || other == nil {
+		return
+	}
 
 	// in the event that these 2 are adjacent already, then we need
 	// to not have them point to themselves on a swap.

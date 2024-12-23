@@ -21,7 +21,9 @@ func Solve09(part int, example bool) error {
 		data = string(real09Data)
 	}
 	fileSystem, err := day9.NewFileSystemFromData(data)
-	if err != nil { return err }
+	if err != nil {
+		return err
+	}
 	if part < 1 || part == 1 {
 		fileSystem.Compact()
 		checksum := fileSystem.Checksum()
