@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/Romanmc72/adventofcode/2024/day6"
-	"github.com/Romanmc72/adventofcode/2024/util"
 )
 
 //go:embed data/06/input.txt
@@ -15,7 +14,6 @@ var real06Data []byte
 var example06Data []byte
 
 func Solve06(part int, example bool) error {
-	logger := util.GetLogger()
 	var data string
 	if example {
 		data = string(example06Data)

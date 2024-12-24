@@ -4,8 +4,6 @@ import (
 	_ "embed"
 	"fmt"
 	"strings"
-
-	"github.com/Romanmc72/adventofcode/2024/util"
 )
 
 //go:embed data/04/input.txt
@@ -15,7 +13,6 @@ var real04Data []byte
 var example04Data []byte
 
 func Solve04(part int, example bool) error {
-	logger := util.GetLogger()
 	var data string
 	if example {
 		data = string(example04Data)

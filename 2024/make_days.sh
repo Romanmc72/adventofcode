@@ -18,8 +18,6 @@ package days
 import (
 	_ "embed"
 	"fmt"
-
-	"$GITHUB_PACKAGE_LOCATION/util"
 )
 
 //go:embed data/$day_text/input.txt
@@ -29,7 +27,6 @@ var real${day_text}Data []byte
 var example${day_text}Data []byte
 
 func Solve$day_text(part int, example bool) error {
-  logger := util.GetLogger()
 	var data string
   if example {
     data = string(example${day_text}Data)
@@ -204,6 +201,10 @@ EOF
   mkdir -p days
   cat <<EOF > days/all_days.go
 package days
+
+import "$GITHUB_PACKAGE_LOCATION/util"
+
+var logger = util.GetLogger()
 
 type Solution func (int, bool) error
 

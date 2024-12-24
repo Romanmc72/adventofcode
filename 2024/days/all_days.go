@@ -1,5 +1,9 @@
 package days
 
+import "github.com/Romanmc72/adventofcode/2024/util"
+
+var logger = util.GetLogger()
+
 type Solution func(int, bool) error
 
 var Solutions = []Solution{

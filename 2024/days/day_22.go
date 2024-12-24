@@ -3,8 +3,6 @@ package days
 import (
 	_ "embed"
 	"fmt"
-
-	"github.com/Romanmc72/adventofcode/2024/util"
 )
 
 //go:embed data/22/input.txt
@@ -14,7 +12,6 @@ var real22Data []byte
 var example22Data []byte
 
 func Solve22(part int, example bool) error {
-	logger := util.GetLogger()
 	var data string
 	if example {
 		data = string(example22Data)

@@ -6,8 +6,6 @@ import (
 	"slices"
 	"strconv"
 	"strings"
-
-	"github.com/Romanmc72/adventofcode/2024/util"
 )
 
 //go:embed data/02/input.txt
@@ -17,7 +15,6 @@ var real02Data []byte
 var example02Data []byte
 
 func Solve02(part int, example bool) error {
-	logger := util.GetLogger()
 	var data string
 	if example {
 		data = string(example02Data)
