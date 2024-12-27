@@ -1,55 +1,82 @@
 package days
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestDay11Stone(t *testing.T) {
 	st := NewStone(0)
-	s1, s2, err := st.Mutate()
+	s1, s2 := st.Mutate()
 	if s1.value != 1 {
 		t.Errorf("Wanted=1 but got=%d", s1.value)
 	}
-	if s2 != nil || err != nil {
-		t.Errorf("Wanted= nil, nil but got= %v, %s", s2, err)
+	if s2 != nil {
+		t.Errorf("Wanted= nil but got= %s", s2)
 	}
-	s1, s2, err = st.Mutate()
+	s1, s2 = s1.Mutate()
 	if s1.value != 2024 {
 		t.Errorf("Wanted=2024 but got=%d", s1.value)
 	}
-	if s2 != nil || err != nil {
-		t.Errorf("Wanted= nil, nil but got= %v, %s", s2, err)
+	if s2 != nil {
+		t.Errorf("Wanted= nil but got= %s", s2)
 	}
-	s1, s2, err = st.Mutate()
+	s1, s2 = s1.Mutate()
 	if s1.value != 20 {
 		t.Errorf("Wanted=20 but got=%d", s1.value)
 	}
-	if s2.value != 24 || err != nil {
-		t.Errorf("Wanted= 24, nil but got= %v, %s", s2, err)
+	if s2.value != 24 {
+		t.Errorf("Wanted= 24 but got= %s", s2)
 	}
-	s3, s4, err := s1.Mutate()
-	s5, s6, err2 := s2.Mutate()
-	if s3.value != 2 || s4.value != 0 || s5.value != 2 || s6.value != 4 || err != nil || err2 != nil {
-		t.Errorf("Wanted 2, 0, 2, 4, nil, nil but got %v, %v, %v, %v, %s, %s", s3, s4, s5, s6, err, err2)
+	s3, s4 := s1.Mutate()
+	s5, s6 := s2.Mutate()
+	if s3.value != 2 || s4.value != 0 || s5.value != 2 || s6.value != 4 {
+		t.Errorf("Wanted 2, 0, 2, 4 but got %s, %s, %s, %s", s3, s4, s5, s6)
 	}
 }
 
-func TestStoneLineBlink(t *testing.T) {
-	sl, err := NewStoneLine("0")
+func TestUniqueNumbers(t *testing.T) {
+	input := "572556 22 0 528 4679021 1 10725 2790"
+	nums := map[int]bool{}
+	sl, err := NewStoneLine(input)
 	if err != nil {
-		t.Error("Could not parse example stone line")
+		t.Errorf("Wanted err=nil but got err=%s", err)
 	}
-	pattern := []int{1, 1, 2, 4, 4, 7, 14, 16, 20, 39, 62, 81, 110, 200, 328}
-	//               0  0  1  2  0  3   7   2   4  19  23  19   29   90  128
-	// see if at any point we get back to a 0 or a 1 on the leading stone,
-	// this will tell us how long it takes that one to repeat
-	for i := 0; i < len(pattern); i++ {
-		want := pattern[i]
-		err := sl.Blink(1)
-		got := sl.Count()
-		if err != nil {
-			t.Errorf("Wanted=nil but got=%s", err)
+	hasNewNumbers := true
+	i := 0
+	for hasNewNumbers || i < 41 {
+		newNums := 0
+		for s := range sl {
+			_, ok := nums[s.value]
+			if !ok {
+				nums[s.value] = true
+				newNums++
+			}
 		}
-		if want != got {
-			t.Errorf("Wanted=%d but got=%d for %v on iteration=%d", want, got, sl, i)
+		sl.Blink(1)
+		if newNums == 0 {
+			return
 		}
+		i++
+	}
+	t.Errorf("Starting with %s and going for %d iterations, was unable to find a cycle", input, i)
+}
+
+func TestDay11Part1And2(t *testing.T) {
+	input := "125 17"
+	sl, err := NewStoneLine(input)
+	if err != nil {
+		t.Errorf("NewStoneLine()\nWanted err=nil but got err=%s", err)
+	}
+	sl.Blink(25)
+	want := 55312
+	got := sl.Count()
+	if want != got {
+		t.Errorf("StoneLine.Blink(25) + StoneLine.Count()\nWanted=%d but got=%d", want, got)
+	}
+	sl.Blink(50)
+	want = 65601038650482
+	got = sl.Count()
+	if want != got {
+		t.Errorf("StoneLine.Blink(75) + StoneLine.Count()\nWanted more than %d but got=%d", want, got)
 	}
 }
