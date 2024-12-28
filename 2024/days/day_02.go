@@ -37,10 +37,10 @@ func Solve02(part int, example bool) error {
 		}
 	}
 	if part < 1 || part == 1 {
-		fmt.Println("Day 02 Part 1 Solution: ", safeReports)
+		fmt.Println("Day 02 Part 1 Solution:", safeReports)
 	}
 	if part < 1 || part == 2 {
-		fmt.Println("Day 02 Part 2 Solution: ", safeReports2)
+		fmt.Println("Day 02 Part 2 Solution:", safeReports2)
 	}
 	return nil
 }

@@ -33,7 +33,7 @@ func Solve03(part int, example bool) error {
 			}
 			total += val
 		}
-		fmt.Println("Day 03 Part 1 Solution: ", total)
+		fmt.Println("Day 03 Part 1 Solution:", total)
 	}
 	if part < 1 || part == 2 {
 		exp := regexp.MustCompile(`(mul\(\d+,\d+\)|do\(\)|don't\(\))`)
@@ -53,7 +53,7 @@ func Solve03(part int, example bool) error {
 				do = parseDosAndDonts(each)
 			}
 		}
-		fmt.Println("Day 03 Part 2 Solution: ", total)
+		fmt.Println("Day 03 Part 2 Solution:", total)
 	}
 	return nil
 }

@@ -19,7 +19,6 @@ func Solve04(part int, example bool) error {
 	} else {
 		data = string(real04Data)
 	}
-	logger.Debug(data)
 	matrix := RuneMatrix{
 		Matrix: strings.Split(data, "\n"),
 	}
@@ -39,10 +38,10 @@ func Solve04(part int, example bool) error {
 		}
 	}
 	if part < 1 || part == 1 {
-		fmt.Println("Day 04 Part 1 Solution: ", finds)
+		fmt.Println("Day 04 Part 1 Solution:", finds)
 	}
 	if part < 1 || part == 2 {
-		fmt.Println("Day 04 Part 2 Solution: ", xMASFinds)
+		fmt.Println("Day 04 Part 2 Solution:", xMASFinds)
 	}
 	return nil
 }

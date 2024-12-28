@@ -63,8 +63,7 @@ func part1(leftList []int, rightList []int) {
 		}
 		totalDiff += diff
 	}
-	fmt.Println("Day 01 Part 2 Solution:")
-	fmt.Println(totalDiff)
+	fmt.Println("Day 01 Part 1 Solution:", totalDiff)
 }
 
 func part2(leftList []int, numberMapping map[int]int) {
@@ -73,8 +72,7 @@ func part2(leftList []int, numberMapping map[int]int) {
 		p := numberMapping[leftVal]
 		totalValue += leftVal * p
 	}
-	fmt.Println("Day 01 Part 2 Solution:")
-	fmt.Println(totalValue)
+	fmt.Println("Day 01 Part 2 Solution:", totalValue)
 }
 
 // Parse a line of string and receive a pair of integers or an error if the

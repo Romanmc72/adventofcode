@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-
-	"github.com/Romanmc72/adventofcode/2024/util"
 )
 
 //go:embed data/05/input.txt
@@ -82,14 +80,12 @@ func (rs RuleSet) checkNumberAgainstRest(number int, rest []int) bool {
 type RuleSet map[int]*map[int]bool
 
 func Solve05(part int, example bool) error {
-	logger := util.GetLogger()
 	var data string
 	if example {
 		data = string(example05Data)
 	} else {
 		data = string(real05Data)
 	}
-	logger.Debug(data)
 	ruleSet, safetyManuals, err := parseRuleSetAndSafetyManuals(data)
 	if err != nil {
 		return err
