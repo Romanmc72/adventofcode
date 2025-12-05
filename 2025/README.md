@@ -20,4 +20,11 @@ and started to follow the guide and ask Gemini how to do stuff.
 
 ## Running this
 
-Still figuring out that part.
+run it with
+
+```sh
+swift run aoc \
+  <day#> \
+  -p <part# (or blank for both)> \
+  --example (optional, default = false)
+```
