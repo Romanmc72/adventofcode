@@ -6,10 +6,7 @@ struct Day02: DayChallenge {
         }
         let left = numStr.prefix(length / 2)
         let right = numStr.suffix(length / 2)
-        if left == right {
-            return true
-        }
-        return false
+        return left == right
     }
 
     /**
