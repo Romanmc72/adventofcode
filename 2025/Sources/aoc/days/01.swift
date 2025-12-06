@@ -8,6 +8,7 @@ struct Day01: DayChallenge {
     }
 
     func solver(input: String, part: Int) -> Int {
+        let dialCeiling = 100
         var position = 50
         var zeroStops = 0
         var zeroes = 0
@@ -19,10 +20,10 @@ struct Day01: DayChallenge {
                 return -1
             }
             let startedOn = position
-            let normalizedTurns = num % 100
+            let normalizedTurns = num % dialCeiling
 
-            if num > 100 {
-                zeroes += num / 100
+            if num > dialCeiling {
+                zeroes += num / dialCeiling
             }
 
             if direction == "L" {
@@ -31,11 +32,11 @@ struct Day01: DayChallenge {
                 position = position + normalizedTurns
             }
 
-            if startedOn != 0 && (position < 0 || position > 100) {
+            if startedOn != 0 && (position < 0 || position > dialCeiling) {
                 zeroes += 1
             }
 
-            position = actuallyModulo(input: position, divisor: 100)
+            position = actuallyModulo(input: position, divisor: dialCeiling)
             if position == 0 {
                 zeroStops += 1
                 zeroes += 1
