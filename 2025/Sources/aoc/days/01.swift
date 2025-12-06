@@ -11,7 +11,7 @@ struct Day01: DayChallenge {
         let dialCeiling = 100
         var position = 50
         var zeroStops = 0
-        var zeroes = 0
+        var zeroPasses = 0
         let lines = input.split(separator: "\n")
         for line in lines {
             let direction = line.prefix(1)
@@ -23,7 +23,7 @@ struct Day01: DayChallenge {
             let normalizedTurns = num % dialCeiling
 
             if num > dialCeiling {
-                zeroes += num / dialCeiling
+                zeroPasses += num / dialCeiling
             }
 
             if direction == "L" {
@@ -33,19 +33,19 @@ struct Day01: DayChallenge {
             }
 
             if startedOn != 0 && (position < 0 || position > dialCeiling) {
-                zeroes += 1
+                zeroPasses += 1
             }
 
             position = actuallyModulo(input: position, divisor: dialCeiling)
             if position == 0 {
                 zeroStops += 1
-                zeroes += 1
+                zeroPasses += 1
             }
         }
         if part == 1 {
             return zeroStops
         }
-        return zeroes
+        return zeroPasses
     }
 
     func part1(input: String) -> Any {
