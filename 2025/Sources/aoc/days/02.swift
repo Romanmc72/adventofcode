@@ -1,5 +1,29 @@
 struct Day02: DayChallenge {
-    func part1(input: String) -> Any {
+    func invalidDetectorPart1(numStr: String) -> Bool {
+        let length = numStr.count
+        if length % 2 == 1 {
+            return false
+        }
+        let left = numStr.prefix(length / 2)
+        let right = numStr.suffix(length / 2)
+        if left == right {
+            return true
+        }
+        return false
+    }
+
+    /**
+     * Did Gemini teach me this algorithm?...
+     * Yes.
+     * Yes it did.
+     */
+    func invalidDetectorPart2(numStr: String) -> Bool {
+        let doubledNumStr = "\(numStr)\(numStr)"
+        let trimmedStr = doubledNumStr.dropLast().dropFirst()
+        return trimmedStr.contains(numStr)
+    }
+
+    func iterateAndDetect(input: String, detector: (String) -> Bool) -> Int {
         var invalidIds: [Int] = []
         let ranges = input.split(separator: ",")
         for range in ranges {
@@ -14,44 +38,20 @@ struct Day02: DayChallenge {
 
             }
             for num in min...max {
-                let numStr = "\(num)"
-                let length = numStr.count
-                if length % 2 == 1 {
-                    continue
-                }
-                let left = numStr.prefix(length / 2)
-                let right = numStr.suffix(length / 2)
-                if left == right {
+                if detector("\(num)") {
                     invalidIds.append(num)
                 }
+
             }
         }
         return invalidIds.reduce(0, +)
     }
+
+    func part1(input: String) -> Any {
+        return iterateAndDetect(input: input, detector: invalidDetectorPart1)
+    }
     
     func part2(input: String) -> Any {
-        var invalidIds: [Int] = []
-        let ranges = input.split(separator: ",")
-        for range in ranges {
-            let splitRange = range.split(separator: "-")
-            guard let min = Int(splitRange[0]) else {
-                print("[ERROR] could not get range split min from: \(range)")
-                return -1
-            }
-            guard let max = Int(splitRange[1]) else {
-                print("[ERROR] could not get range split max from: \(range)")
-                return -1
-
-            }
-            for num in min...max {
-                let numStr = "\(num)"
-                let dubNumStr = "\(numStr)\(numStr)"
-                let trimmedStr = dubNumStr.dropLast().dropFirst()
-                if trimmedStr.contains(numStr) {
-                    invalidIds.append(num)
-                }
-            }
-        }
-        return invalidIds.reduce(0, +)
+        return iterateAndDetect(input: input, detector: invalidDetectorPart2)
     }
 }
