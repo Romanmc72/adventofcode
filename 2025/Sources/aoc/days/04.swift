@@ -57,13 +57,13 @@ struct Day04: DayChallenge {
         return copiedGrid
     }
 
-    func part1(input: String) -> Any {
+    func part1(input: String) -> Int {
         let grid = makeGrid(input: input)
         let removableRolls = identifyRemovals(grid: grid)
         return removableRolls.count
     }
     
-    func part2(input: String) -> Any {
+    func part2(input: String) -> Int {
         var totalRemoved = 0
         var grid = makeGrid(input: input)
         var removableRolls = identifyRemovals(grid: grid)

@@ -48,11 +48,11 @@ struct Day01: DayChallenge {
         return zeroPasses
     }
 
-    func part1(input: String) -> Any {
+    func part1(input: String) -> Int {
         return solver(input: input, part: 1)
     }
 
-    func part2(input: String) -> Any {
+    func part2(input: String) -> Int {
         return solver(input: input, part: 2)
     }
 }

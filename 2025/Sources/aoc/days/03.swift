@@ -47,7 +47,7 @@ struct Day03: DayChallenge {
         return Int(joined) ?? 0
     }
 
-    func part1(input: String) -> Any {
+    func part1(input: String) -> Int {
         var batteries: [Int] = []
         for line in input.split(separator: "\n") {
             let bestCell = pickBestCells(line: String(line), cells: 2)
@@ -57,7 +57,7 @@ struct Day03: DayChallenge {
         return batteries.reduce(0, +)
     }
 
-    func part2(input: String) -> Any {
+    func part2(input: String) -> Int {
         var batteries: [Int] = []
         for line: String.SubSequence in input.split(separator: "\n") {
             let bestCell = pickBestCells(line: String(line), cells: 12)

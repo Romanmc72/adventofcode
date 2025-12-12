@@ -20,5 +20,9 @@ let package = Package(
                 .process("data") 
             ]
         ),
+        .testTarget(
+            name: "aocTests",
+            dependencies: ["aoc"]
+        ),
     ],
 )

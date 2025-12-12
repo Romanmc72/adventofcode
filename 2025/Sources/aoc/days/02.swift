@@ -44,11 +44,11 @@ struct Day02: DayChallenge {
         return invalidIds.reduce(0, +)
     }
 
-    func part1(input: String) -> Any {
+    func part1(input: String) -> Int {
         return iterateAndDetect(input: input, detector: invalidDetectorPart1)
     }
     
-    func part2(input: String) -> Any {
+    func part2(input: String) -> Int {
         return iterateAndDetect(input: input, detector: invalidDetectorPart2)
     }
 }

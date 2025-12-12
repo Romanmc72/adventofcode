@@ -28,3 +28,17 @@ swift run aoc \
   -p <part# (or blank for both)> \
   --example (optional, default = false)
 ```
+
+## Tests
+
+Oh yeah, there are some unit tests that I made for when I got stuck and wanted to debug which cases were tripping me up. To run those just run:
+
+```sh
+swift test
+```
+
+or if you want to run just one test or test case you can use the `--filter` flag like so:
+
+```sh
+swift test --filter Day05Tests.testExample
+```
