@@ -53,8 +53,7 @@ struct Day05: DayChallenge {
             nextRangeIndex = rangeIndex + 1
         }
         let lastRange = ranges[ranges.count - 1]
-        let lastRangeAdded = consolidatedRanges[consolidatedRanges.count - 1]
-        if consolidatedRanges.count > 0 && lastRange.max > lastRangeAdded.max {
+        if consolidatedRanges.count > 0 && lastRange.max > consolidatedRanges[consolidatedRanges.count - 1].max {
             consolidatedRanges.append(lastRange)
         }
         return consolidatedRanges
