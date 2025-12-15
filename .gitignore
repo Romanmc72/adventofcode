@@ -3,6 +3,7 @@
 *main
 *.coverage.out*
 *.class
+.vscode
 
 # Ignoring the arnold C jar because it is 13 MB
 ArnoldC.jar

@@ -28,25 +28,62 @@ struct Day06: DayChallenge {
     }
     
     func part2(input: String) -> Int {
-        var rawCharacters: [[Substring.SubSequence]] = []
+        var rawCharacters: [[Character]] = []
         var problemSplits: [Int] = []
+        var operators: [Substring.SubSequence] = []
         var problems: [[Int]] = []
         var solutions: [Int] = []
         let lines = input.split(separator: "\n")
 		for (index, line) in lines.enumerated() {
             if index < lines.count - 1 {
-                rawCharacters.append(line.split(separator: ""))
+                rawCharacters.append(Array(line))
                 continue
             }
-            for (charINdex, char) in line.split(separator: "").enumerated() {
-                let you_tell_your_wife_You_Got_It_Babe_while_your_9_mo_Old_has_pinkeye = false
-                let answer = false
-                if you_tell_your_wife_You_Got_It_Babe_while_your_9_mo_Old_has_pinkeye == answer {
-                    print("You get a divorce")
-                } 
-            }
 
+            for (charIndex, char) in line.split(separator: "").enumerated() {
+                if char == "*" || char == "+" {
+                    operators.append(char)
+                    problemSplits.append(charIndex)
+                }
+            }
         }
-        return 0
+
+        let cols = rawCharacters[0].count
+        let rows = rawCharacters.count
+
+        // Transpose the array and condense the characters to numbers
+        let numbers = (0..<cols).map { colIndex in
+            let newRow = (0..<rows).map { rowIndex in
+                return rawCharacters[rowIndex][colIndex]
+            }
+            guard let n = Int(newRow.map {String($0)}.joined(separator: "").trimmingCharacters(in: .whitespacesAndNewlines)) else {
+                return 0
+            }
+            return n
+        }
+
+        var start = 0
+        for e in problemSplits {
+            if e == 0 {
+                continue
+            }
+            problems.append(Array(numbers[start..<e - 1]))
+            start = e
+        }
+        problems.append(Array(numbers[start..<numbers.count]))
+
+        for (index, op) in operators.enumerated() {
+            if op == "*" {
+                solutions.append(problems[index].reduce(1, *))
+                continue
+            }
+            if op == "+" {
+                solutions.append(problems[index].reduce(0, +))
+                continue
+            }
+            print("[ERROR] Found a weird symbol! \(op)")
+            return -1
+        }
+        return solutions.reduce(0, +)
     }
 }
